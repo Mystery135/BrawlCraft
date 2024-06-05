@@ -1,0 +1,6 @@
+name: MinecraftBrawlStars
+version: '${project.version}'
+main: me.mxtery.minecraftbrawlstars.MinecraftBrawlStars
+api-version: '1.20'
+authors: [Mxtery]
+description: Adds BrawlStars to Minecraft
