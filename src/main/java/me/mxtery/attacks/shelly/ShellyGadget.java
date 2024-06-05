@@ -1,4 +1,6 @@
-package me.mxtery.items;
+package me.mxtery.attacks.shelly;
 
-public class ShellyGadget {
+import org.bukkit.event.Listener;
+
+public class ShellyGadget implements Listener {
 }

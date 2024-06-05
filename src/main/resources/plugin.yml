@@ -4,3 +4,13 @@ main: me.mxtery.minecraftbrawlstars.MinecraftBrawlStars
 api-version: '1.20'
 authors: [Mxtery]
 description: Adds BrawlStars to Minecraft
+commands:
+  minecraftbrawlstars:
+    usage: /mbs kitselect <brawler>
+    description: Main command for the Minecraft Brawl Stars plugin.
+    permission: minecraftbrawlstars.commands
+    aliases: [mbs]
+permissions:
+  minecraftbrawlstars.commands:
+    description: Allows player to use all Minecraft Brawl Stars commands
+    default: true
