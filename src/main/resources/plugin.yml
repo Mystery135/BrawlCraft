@@ -10,7 +10,9 @@ commands:
     description: Main command for the Minecraft Brawl Stars plugin.
     permission: minecraftbrawlstars.commands
     aliases: [mbs]
+  arena:
 permissions:
   minecraftbrawlstars.commands:
     description: Allows player to use all Minecraft Brawl Stars commands
     default: true
+

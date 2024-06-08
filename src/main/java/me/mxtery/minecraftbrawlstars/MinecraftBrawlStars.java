@@ -2,16 +2,17 @@ package me.mxtery.minecraftbrawlstars;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import me.mxtery.CooldownInit;
-import me.mxtery.Keys;
-import me.mxtery.attacks.shelly.ShellyGadget;
-import me.mxtery.attacks.shelly.ShellySuper;
-import me.mxtery.commands.MinecraftBrawlStarsCommand;
-import me.mxtery.commands.MinecraftBrawlStarsTabCompleter;
-import me.mxtery.attacks.shelly.ShellyNormal;
-import me.mxtery.kits.Shelly;
-import me.mxtery.listeners.GeneralListeners;
+import me.mxtery.minecraftbrawlstars.commands.ArenaCommand;
+import me.mxtery.minecraftbrawlstars.commands.MinecraftBrawlStarsCommand;
+import me.mxtery.minecraftbrawlstars.commands.MinecraftBrawlStarsTabCompleter;
+import me.mxtery.minecraftbrawlstars.kits.Shelly;
+import me.mxtery.minecraftbrawlstars.listeners.ConnectListener;
+import me.mxtery.minecraftbrawlstars.listeners.GameListener;
+import me.mxtery.minecraftbrawlstars.listeners.GeneralListeners;
+import me.mxtery.minecraftbrawlstars.manager.ArenaManager;
+import me.mxtery.minecraftbrawlstars.manager.ConfigManager;
 import net.minecraft.server.level.EntityPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,27 +20,38 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public final class MinecraftBrawlStars extends JavaPlugin implements Listener {
+    private ArenaManager arenaManager;
     private static MinecraftBrawlStars plugin;
     public static MinecraftBrawlStars getInstance(){
         return plugin;
     }
-
+    public static List<UUID> RECENTLY_PLAYED_VOICE_LINES = new ArrayList<>();
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 
     @Override
     public void onEnable() {
-        this.saveDefaultConfig();
         plugin = this;
-        getServer().getConsoleSender().sendMessage("asdf");
+        ConfigManager.setupConfig(this);
+        arenaManager = new ArenaManager(this);
+        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
+        getCommand("arena").setExecutor(new ArenaCommand(this));
+
         Keys.init(this);
         getCommand("minecraftbrawlstars").setExecutor(new MinecraftBrawlStarsCommand());
         getCommand("minecraftbrawlstars").setTabCompleter(new MinecraftBrawlStarsTabCompleter());
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new ShellyNormal(), this);
-        getServer().getPluginManager().registerEvents(new ShellySuper(), this);
-        getServer().getPluginManager().registerEvents(new ShellyGadget(), this);
+//        getServer().getPluginManager().registerEvents(new ShellyNormal(), this);
+//        getServer().getPluginManager().registerEvents(new ShellySuper(), this);
+//        getServer().getPluginManager().registerEvents(new ShellyGadget(), this);
+        getServer().getPluginManager().registerEvents(new Shelly(), this);
         getServer().getPluginManager().registerEvents(new CooldownInit(), this);
         getServer().getPluginManager().registerEvents(new GeneralListeners(), this);
 

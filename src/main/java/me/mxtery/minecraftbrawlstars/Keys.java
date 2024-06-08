@@ -1,4 +1,4 @@
-package me.mxtery;
+package me.mxtery.minecraftbrawlstars;
 
 import me.mxtery.minecraftbrawlstars.MinecraftBrawlStars;
 import org.bukkit.NamespacedKey;

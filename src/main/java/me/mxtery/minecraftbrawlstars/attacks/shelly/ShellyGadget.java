@@ -1,4 +1,4 @@
-package me.mxtery.attacks.shelly;
+package me.mxtery.minecraftbrawlstars.attacks.shelly;
 
 import org.bukkit.event.Listener;
 

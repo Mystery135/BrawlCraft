@@ -1,4 +1,4 @@
-package me.mxtery.commands;
+package me.mxtery.minecraftbrawlstars.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

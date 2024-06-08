@@ -1,4 +1,4 @@
-package me.mxtery.helpers;
+package me.mxtery.minecraftbrawlstars.helpers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

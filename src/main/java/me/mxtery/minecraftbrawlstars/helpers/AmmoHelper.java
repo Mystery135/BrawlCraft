@@ -1,4 +1,4 @@
-package me.mxtery.helpers;
+package me.mxtery.minecraftbrawlstars.helpers;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,10 +29,16 @@ public class AmmoHelper {
         int numTokens = getNumSuperToken(player, superToken);
         if (numTokens == 0){
             player.getInventory().setItem(7, new ItemStack(superToken, amount));
-        }else if (numTokens >100){
+            if (getNumAmmo(player, superToken) >= 100){
+                player.getWorld().playSound(player.getLocation(), "custom:super-charged", 4.0f, 1.0f);
+            }
+        }else if (numTokens >= 100){
             player.getInventory().setItem(7, new ItemStack(superToken, 100));
         }else{
             player.getInventory().setItem(7, new ItemStack(superToken, getNumSuperToken(player, superToken) + amount));
+            if (getNumAmmo(player, superToken) >= 100){
+                player.getWorld().playSound(player.getLocation(), "custom:super-charged", 10.0f, 1.0f);
+            }
         }
 
     }

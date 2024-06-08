@@ -1,9 +1,7 @@
-package me.mxtery;
+package me.mxtery.minecraftbrawlstars;
 
-import me.mxtery.attacks.shelly.ShellyNormal;
-import me.mxtery.helpers.AmmoHelper;
-import me.mxtery.kits.Shelly;
-import me.mxtery.minecraftbrawlstars.MinecraftBrawlStars;
+import me.mxtery.minecraftbrawlstars.helpers.AmmoHelper;
+import me.mxtery.minecraftbrawlstars.kits.Shelly;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -14,9 +12,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.codehaus.plexus.util.cli.shell.Shell;
 
-import static me.mxtery.helpers.AmmoHelper.getNumAmmo;
+import static me.mxtery.minecraftbrawlstars.helpers.AmmoHelper.getNumAmmo;
 
 public class CooldownInit implements Listener {
     @EventHandler
@@ -42,10 +39,10 @@ public class CooldownInit implements Listener {
                      if (AmmoHelper.getNumSuperToken(player, Shelly.SUPER_TOKEN) >100){
                          player.getInventory().setItem(7, new ItemStack(Shelly.SUPER_TOKEN, 100));
                      }
-                    if (ShellyNormal.getShellyCooldowns(player) > 0 || getNumAmmo(player, Shelly.AMMO) == 3) {
+                    if (Shelly.getShellyNormalCooldown(player) > 0 || getNumAmmo(player, Shelly.AMMO) == 3) {
                         showAmmo(player, actionbartext, true);
                         if (getNumAmmo(player, Shelly.AMMO) == 3){
-                            ShellyNormal.getShellyCooldowns().put(player.getUniqueId(), System.currentTimeMillis() + Shelly.NORMAL_COOLDOWN);
+                            Shelly.getShellyNormalCooldown().put(player.getUniqueId(), System.currentTimeMillis() + Shelly.NORMAL_COOLDOWN);
                         }
                     } else if (getNumAmmo(player, Shelly.AMMO) >= 3){
                         player.getInventory().remove(Shelly.AMMO);
@@ -61,7 +58,7 @@ public class CooldownInit implements Listener {
                             player.playSound(player.getLocation(), "custom:shelly-reload", 3f, 1.0f);
 
                         showAmmo(player, actionbartext, false);
-                        ShellyNormal.getShellyCooldowns().put(player.getUniqueId(), System.currentTimeMillis() + Shelly.NORMAL_COOLDOWN);
+                        Shelly.getShellyNormalCooldown().put(player.getUniqueId(), System.currentTimeMillis() + Shelly.NORMAL_COOLDOWN);
 
                     }
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.translateAlternateColorCodes('&', actionbartext.toString())));
@@ -78,14 +75,13 @@ private void showAmmo(Player player, StringBuilder actionbartext, boolean showPe
     if (showPercent){
         if (getNumAmmo(player, Shelly.AMMO) != 3){
             double fifth = Shelly.NORMAL_COOLDOWN /5000.0;
-            int percentDone = 5 - (int) (ShellyNormal.getShellyCooldowns(player)/fifth);
+            int percentDone = 5 - (int) (Shelly.getShellyNormalCooldown(player)/fifth) - 1;
             for (int i = 0; i<percentDone; i++){
                 actionbartext.append("&6█");
             }
-            actionbartext.append(" ");
         }
     }
-    actionbartext.append("&e&l SUPER: " + AmmoHelper.getNumSuperToken(player, Shelly.SUPER_TOKEN) + "% ");
+    actionbartext.append("&e&l SUPER: " + (AmmoHelper.getNumSuperToken(player, Shelly.SUPER_TOKEN) < 100? AmmoHelper.getNumSuperToken(player, Shelly.SUPER_TOKEN) + "%" : "&a&lREADY!"));
 }
 
 }
