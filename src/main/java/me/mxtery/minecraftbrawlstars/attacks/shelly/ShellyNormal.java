@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class ShellyNormal implements Listener {
+public class ShellyNormal {
 
     public static ItemStack getShellyNormal(){
         ItemStack shellyNormal = new ItemStack(Material.CROSSBOW);

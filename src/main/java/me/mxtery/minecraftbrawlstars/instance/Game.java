@@ -4,6 +4,7 @@ import me.mxtery.minecraftbrawlstars.GameState;
 import me.mxtery.minecraftbrawlstars.kits.Shelly;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -23,6 +24,8 @@ public class Game {
         for (UUID uuid : arena.getPlayers()){
             points.put(uuid, 0);
             Shelly.SET_KIT(Bukkit.getPlayer(uuid));
+            Bukkit.getPlayer(uuid).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
+            Bukkit.getPlayer(uuid).setHealth(60);
         }
     }
 

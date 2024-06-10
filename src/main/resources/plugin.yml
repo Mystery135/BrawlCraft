@@ -14,5 +14,5 @@ commands:
 permissions:
   minecraftbrawlstars.commands:
     description: Allows player to use all Minecraft Brawl Stars commands
-    default: true
+    default: op
 

@@ -1,5 +1,6 @@
 package me.mxtery.minecraftbrawlstars.helpers;
 
+import me.mxtery.minecraftbrawlstars.kits.Shelly;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,14 +31,14 @@ public class AmmoHelper {
         if (numTokens == 0){
             player.getInventory().setItem(7, new ItemStack(superToken, amount));
             if (getNumAmmo(player, superToken) >= 100){
-                player.getWorld().playSound(player.getLocation(), "custom:super-charged", 4.0f, 1.0f);
+                player.playSound(player, "custom:super-charged", 4.0f, 1.0f);
             }
         }else if (numTokens >= 100){
             player.getInventory().setItem(7, new ItemStack(superToken, 100));
         }else{
             player.getInventory().setItem(7, new ItemStack(superToken, getNumSuperToken(player, superToken) + amount));
             if (getNumAmmo(player, superToken) >= 100){
-                player.getWorld().playSound(player.getLocation(), "custom:super-charged", 10.0f, 1.0f);
+                player.playSound(player, "custom:super-charged", 10.0f, 1.0f);
             }
         }
 
@@ -47,6 +48,8 @@ public class AmmoHelper {
     }
     public static void removeAmmo(Player player, Material ammo){
         player.getInventory().setItem(8, new ItemStack(ammo, AmmoHelper.getNumAmmo(player, ammo)-1));
-
+    }
+    public static void removeGadget(Player player){
+        player.getInventory().getItem(2).setAmount(player.getInventory().getItem(2).getAmount()-1);
     }
 }

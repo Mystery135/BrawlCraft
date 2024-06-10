@@ -10,7 +10,7 @@ public class VoicelineHelper {
         if (MinecraftBrawlStars.RECENTLY_PLAYED_VOICE_LINES.contains(player.getUniqueId())){
             return false;
         }
-        player.getWorld().playSound(player.getLocation(), sound, vol, pitch);
+        player.playSound(player, sound, vol, pitch);
         MinecraftBrawlStars.RECENTLY_PLAYED_VOICE_LINES.add(player.getUniqueId());
         new BukkitRunnable() {
             @Override

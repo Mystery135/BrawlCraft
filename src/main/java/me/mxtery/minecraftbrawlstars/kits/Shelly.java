@@ -1,6 +1,8 @@
 package me.mxtery.minecraftbrawlstars.kits;
 
+import me.mxtery.minecraftbrawlstars.CooldownInit;
 import me.mxtery.minecraftbrawlstars.Keys;
+import me.mxtery.minecraftbrawlstars.attacks.shelly.ShellyGadget;
 import me.mxtery.minecraftbrawlstars.attacks.shelly.ShellyNormal;
 import me.mxtery.minecraftbrawlstars.attacks.shelly.ShellySuper;
 import me.mxtery.minecraftbrawlstars.helpers.*;
@@ -23,6 +25,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -30,6 +33,7 @@ public class Shelly implements Listener {
     public static List<String> SHELLY_PLAYERS = new ArrayList<>();
     public static String NAME = "SHELLY";
     public static Material AMMO = Material.HEART_OF_THE_SEA;
+    public static Material GADGET = Material.LIME_DYE;
     public static Material SUPER_TOKEN = Material.ENDER_EYE;
     public static int NORMAL_COOLDOWN = 1500;
     public static double DAMAGE_PER_NORMAL_SHELL = 2;
@@ -38,6 +42,8 @@ public class Shelly implements Listener {
         player.getInventory().clear();
         player.getInventory().setItem(0, ShellyNormal.getShellyNormal());
         player.getInventory().setItem(1, ShellySuper.getShellySuper());
+
+        player.getInventory().setItem(2, ShellyGadget.getShellyGadget());
         SkinHelper.setSkin(player,
                 "eyJ0aW1lc3RhbXAiOjE1NzY1NDAwNzU3MjcsInByb2ZpbGVJZCI6IjE5MjUyMWI0ZWZkYjQyNWM4OTMxZjAyYTg0OTZlMTFiIiwicHJvZmlsZU5hbWUiOiJTZXJpYWxpemFibGUiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzg2Y2M2Y2YyY2M2MTIyNTU3MGVkMmQyMjc4Y2M3ZjMwNTViOWEzYWU3MThmYjgyNGE0YTVjMjIzOWM3Njk3M2EiLCJtZXRhZGF0YSI6eyJtb2RlbCI6InNsaW0ifX19fQ==",
                 "QuMl4kpNAvutkL0rsU5Kknvw2nP+aKV/CK0GBrF+/fz5sz/eB7dVk1+oXz7kyzTotcq40WpatOMDX9+JUvsxzjS1PKqLjX7xcMbMHqDTKVxYwWXLrV3zknSXKhQyfVLgHjxuRYDgUfQUCAXxuZubDNnBMPGxJhRiDHvk8Y5wju4xf3qFJq19mZxGJasLWxvULbehUKm5TJaKvZZemL+Ry9IA+IXMXGsq/vyNGQ4XKvGuqGXY2N7Vu8+3ALCm24Gt4leaU2wvwJyM0Zuly91HEBWG32yxM5tZ1VhUNZRPtWrHlctjfhjSxEXa6ZKGo5vCmCoYUvS/H2SsLndd3CV0p8iJkaVR1V2TGe1iyopgDyHr5/4V8oZjzOZww1rxJJ6Wg4txCKWtgOrAVWR6Z1KU3y73zJxaGUmxnnYTaWozhw4/tD5ko/8nUxh1wzsz3qq5MI8j5GqAvLiVGxGZC4dsVPPHTq1beQJSbP1CV59whsPH7SeeZ27JnaInojwmaulQoR/o0uuqb416pv7ZHTBG68VsTmBDcAvZYvD67FRwzGMPee8IOyt+xTbpcUNbJRhxdWqXRZ+3BWIdr7nv8wmUVfB9nWdAFs7W/hYEJeDyXufbEizYC/XZ2hs48JymP0ywP4USq4/E1bm0Rakm2c/+t1AAv2BdEC7wxT3eHSv5EA4="
@@ -51,9 +57,11 @@ public class Shelly implements Listener {
     }
     private void doShellySuper(Player player){
         if (AmmoHelper.getNumSuperToken(player, Shelly.SUPER_TOKEN) < 100){
-            player.getWorld().playSound(player.getLocation(), "custom:shelly-no-ammo", 1.0f, 1.0f);
+            player.playSound(player, "custom:shelly-no-ammo", 1.0f, 1.0f);
             return;
         }
+        CooldownInit.playerToNextHeal.put(player.getUniqueId(), 0);
+
         for (int i = -20; i <= 20; i += 5){
             Snowball snowball = player.launchProjectile(Snowball.class);
             snowball.setGravity(false);
@@ -153,23 +161,29 @@ public class Shelly implements Listener {
     }
     private void doShellyNormalAttack(Player player){
         if (AmmoHelper.getNumAmmo(player, Shelly.AMMO) == 0){
-            player.getWorld().playSound(player.getLocation(), "custom:shelly-no-ammo", 1.0f, 1.0f);
+            player.playSound(player, "custom:shelly-no-ammo", 1.0f, 1.0f);
             return;
         }
+        CooldownInit.playerToNextHeal.put(player.getUniqueId(), 0);
 
         player.getInventory().setItem(8, new ItemStack(Shelly.AMMO, AmmoHelper.getNumAmmo(player, Shelly.AMMO)-1));
         if (AmmoHelper.getNumAmmo(player, Shelly.AMMO) == 0){
-            player.getWorld().playSound(player.getLocation(), "custom:last-ammo", 1.0f, 1.0f);
+            player.playSound(player, "custom:last-ammo", 1.0f, 1.0f);
         }
         //clay pigeons: -2, 3,1 and increase velocity
         //norm: -10, 11, 5
-        for (int i = -12; i <= 13; i += 5){
+
+        int[] angles = MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.
+                containsKey(player.getUniqueId()) ? new int[]{-3, 3, 1} : new int[]{-12, 13, 5};
+        for (int i = angles[0]; i <= angles[1]; i += angles[2]){
             if (i == 0) {
                 continue;
             }
             Snowball snowball = player.launchProjectile(Snowball.class);
             snowball.setGravity(false);
-            snowball.setVelocity((player.getLocation().getDirection().multiply(1.5f).rotateAroundY(Math.toRadians(i))));
+            snowball.setVelocity((player.getLocation().getDirection().multiply(
+                    MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.containsKey(player.getUniqueId()) ? 2.3f : 1.5f
+                    ).rotateAroundY(Math.toRadians(i))));
             snowball.setCustomName("Shelly Shell");
             snowball.setItem(new ItemStack(Shelly.AMMO));
             Bukkit.getScheduler().runTaskLater(MinecraftBrawlStars.getInstance(), new Runnable() {
@@ -200,6 +214,48 @@ public class Shelly implements Listener {
         doShellySuper(player);
     }
     @EventHandler
+    public void onShellyGadget(PlayerInteractEvent event){
+        if (event.getItem() == null){return;}
+        if (event.getHand() != EquipmentSlot.HAND){return;}
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
+            return;
+        }
+        if (!event.getItem().hasItemMeta()){return;};
+        if (event.getItem().getType() != Material.LIME_DYE){
+            return;
+        }
+        if (!event.getItem().getItemMeta().getPersistentDataContainer().has(Keys.shellyGadget)){
+            return;
+        }
+        if (event.getPlayer().getCooldown(Material.LIME_DYE) != 0){
+            return;
+        }
+        Player player = event.getPlayer();
+        player.setCooldown(Material.LIME_DYE, 20 * 10);
+        event.setCancelled(true);
+        MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.put(player.getUniqueId(), 100);
+        CooldownInit.playerToNextHeal.put(player.getUniqueId(), 0);
+
+        AmmoHelper.removeGadget(player);
+        if (player.getInventory().getItem(2) == null){
+            player.getInventory().setItem(2, ShellyGadget.getEmptyShellyGadget());
+        }
+        player.getWorld().playSound(player, "custom:gadget-activate", 1, 1);
+        new BukkitRunnable() {
+            UUID playerUUID = player.getUniqueId();
+            @Override
+            public void run() {
+                MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.put(playerUUID, MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.get(playerUUID) - 1);
+                if (MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.get(playerUUID) <= 0){
+                    MinecraftBrawlStars.PLAYER_TO_GADGET_REMAINING.remove(playerUUID);
+                    cancel();
+                }
+            }
+        }.runTaskTimer(MinecraftBrawlStars.getInstance(), 0, 1);
+
+
+    }
+    @EventHandler
     public void onShellyHurt(EntityDamageEvent event){
         if (!(event.getEntity() instanceof Player)){
             return;
@@ -221,7 +277,7 @@ public class Shelly implements Listener {
             return;
         }
         int rand = (int) (Math.random()*4+1);
-        player.playSound(player.getLocation(), "custom:shelly-die-" + rand, 1, 1);
+        player.playSound(player, "custom:shelly-die-" + rand, 1, 1);
     }
 
 }

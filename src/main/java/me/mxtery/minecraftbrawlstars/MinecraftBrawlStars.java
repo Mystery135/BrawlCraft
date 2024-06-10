@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public final class MinecraftBrawlStars extends JavaPlugin implements Listener {
         return plugin;
     }
     public static List<UUID> RECENTLY_PLAYED_VOICE_LINES = new ArrayList<>();
+    public static HashMap<UUID, Integer> PLAYER_TO_GADGET_REMAINING = new HashMap();
     public ArenaManager getArenaManager() {
         return arenaManager;
     }

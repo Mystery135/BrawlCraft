@@ -7,7 +7,9 @@ import me.mxtery.minecraftbrawlstars.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +59,15 @@ game.start();
     }
 
     public void reset(boolean kickPlayers, boolean clearInv){
+        for (UUID uuid : players){
+            Bukkit.getPlayer(uuid).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+        }
+
         if (kickPlayers){
             Location spawn = ConfigManager.getLobbySpawn();
 for (UUID uuid : players){
-    Bukkit.getPlayer(uuid).teleport(spawn);
+        Bukkit.getPlayer(uuid).teleport(spawn);
+
     if (clearInv){
         Bukkit.getPlayer(uuid).getInventory().clear();
         MinecraftBrawlStars.getInstance().getConfig().set(Bukkit.getPlayer(uuid).getUniqueId().toString(), null);
@@ -120,7 +127,7 @@ players.clear();
         }
         if (state == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "The game has ended as too many players have left.");
-            reset(false, true);
+            reset(true, true);
         }
     }
     public void setState(GameState state){

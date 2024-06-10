@@ -1,5 +1,6 @@
 package me.mxtery.minecraftbrawlstars.listeners;
 
+import me.mxtery.minecraftbrawlstars.helpers.MessageHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,19 +30,20 @@ public class GeneralListeners implements Listener {
     public void onPlayerChangeSlot(PlayerItemHeldEvent event){
         if (event.getNewSlot() == 0 || event.getNewSlot() == 1 || event.getNewSlot() == 2){
             return;
-        }event.setCancelled(true);
+        }
+        event.setCancelled(true);
     }
 @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-      event.getPlayer().setResourcePack("https://www.dropbox.com/scl/fi/2mzgt3um21yujh718qagm/MCBS.zip?rlkey=42i9xstyxyh3g3f62sbzlkdjv&st=m5prd3ul&dl=1");
-
+      event.getPlayer().setResourcePack("https://www.dropbox.com/scl/fi/2mzgt3um21yujh718qagm/MCBS.zip?rlkey=42i9xstyxyh3g3f62sbzlkdjv&st=6nsgpbgo&dl=1");
 }
 @EventHandler
     public void onResourceStatus(PlayerResourcePackStatusEvent e){
       if (e.getStatus() != PlayerResourcePackStatusEvent.Status.ACCEPTED && e.getStatus() != PlayerResourcePackStatusEvent.Status.DOWNLOADED
       && e.getStatus() != PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED
       ){
-          e.getPlayer().kickPlayer("The resource pack failed to load!" + e.getStatus());
+//          e.getPlayer().kickPlayer("" + e.getStatus());
+          MessageHelper.sendPluginMessage(e.getPlayer(), "&cThe resource pack failed to load! Error message: " + e.getStatus());
 
       }
 }

@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class ShellySuper implements Listener {
+public class ShellySuper {
     public static ItemStack getShellySuper(){
         ItemStack shellySuper = new ItemStack(Material.CROSSBOW);
         ItemMeta meta = shellySuper.getItemMeta();
