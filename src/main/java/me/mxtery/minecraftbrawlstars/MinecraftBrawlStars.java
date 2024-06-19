@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import me.mxtery.minecraftbrawlstars.commands.ArenaCommand;
 import me.mxtery.minecraftbrawlstars.commands.MinecraftBrawlStarsCommand;
 import me.mxtery.minecraftbrawlstars.commands.MinecraftBrawlStarsTabCompleter;
+import me.mxtery.minecraftbrawlstars.kits.Colt;
 import me.mxtery.minecraftbrawlstars.kits.Shelly;
 import me.mxtery.minecraftbrawlstars.listeners.ConnectListener;
 import me.mxtery.minecraftbrawlstars.listeners.GameListener;
@@ -54,6 +55,7 @@ public final class MinecraftBrawlStars extends JavaPlugin implements Listener {
 //        getServer().getPluginManager().registerEvents(new ShellySuper(), this);
 //        getServer().getPluginManager().registerEvents(new ShellyGadget(), this);
         getServer().getPluginManager().registerEvents(new Shelly(), this);
+        getServer().getPluginManager().registerEvents(new Colt(), this);
         getServer().getPluginManager().registerEvents(new CooldownInit(), this);
         getServer().getPluginManager().registerEvents(new GeneralListeners(), this);
 
